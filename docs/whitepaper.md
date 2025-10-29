@@ -78,16 +78,16 @@ Minting of ℰ follows **proof-of-contribution** attested by elected **Attestors
 
 ### 4.1 Mechanisms
 
-- **Ballot privacy & verifiability:** Elections specify either **Commit–Reveal** (commitment \(C=H(vote, salt)\), later reveal) or **MACI-style encrypted ballots**. Receipt-free mode is offered. On-chain artifacts include proposal hash, ballot commitments or encrypted payloads, and a result digest with proofs.
-- **Ranked-Choice Voting (RCV):** Single-winner uses instant-runoff; multi-winner uses Droop quota. Tie-break seed = \(H(\text{proposalId}\,\|\,\text{snapshotHeight})\). Exhausted ballots do not transfer further.
+- **Ballot privacy & verifiability:** Elections specify either **Commit–Reveal** (commitment $C=H(vote, salt)$, later reveal) or **MACI-style encrypted ballots**. Receipt-free mode is offered. On-chain artifacts include proposal hash, ballot commitments or encrypted payloads, and a result digest with proofs.
+- **Ranked-Choice Voting (RCV):** Single-winner uses instant-runoff; multi-winner uses Droop quota. Tie-break seed = $H(\text{proposalId}\,\|\,\text{snapshotHeight})$. Exhausted ballots do not transfer further.
 - **Revocable Delegation (domain-scoped):** Delegations form a directed acyclic graph per domain; cycles are resolved by removing the newest edge. A direct vote overrides delegation for that proposal.
-- **Quadratic Voting (QV) — budgeting only:** Each voter receives a fixed, non-transferable credit budget \(B\). Casting \(k\) votes on an option costs \(k^2\). Credits expire at round end and are not tradable.
+- **Quadratic Voting (QV) — budgeting only:** Each voter receives a fixed, non-transferable credit budget $B$. Casting $k$ votes on an option costs $k^2$. Credits expire at round end and are not tradable.
 - **Quorum & thresholds:** Network-wide constitutional measures require **two-of-three** supermajorities across the **Assembly of Members**, relevant **Steward Circle**, and **Validator Commons**. Operational items: Steward Circle + Assembly simple majority with quorum ≥ max(1% of eligible, 500).
-- **Timing windows:** Commit open/close and reveal open/close (or MACI equivalents) are declared per election with grace periods. Eligibility snapshot height \(h_s\) is stored in the proposal object.
+- **Timing windows:** Commit open/close and reveal open/close (or MACI equivalents) are declared per election with grace periods. Eligibility snapshot height $h_s$ is stored in the proposal object.
 
 ### 4.2 Auditability
 
-Publish canonical JSON artifacts: (i) ballot commitments/encrypted payloads, (ii) RCV round tables, (iii) delegation resolution trace, (iv) result digest and proof hashes. A **Verifier CLI** recomputes eligibility at \(h_s\), replays RCV rounds, resolves delegations, validates proofs, and emits a canonical results file.
+Publish canonical JSON artifacts: (i) ballot commitments/encrypted payloads, (ii) RCV round tables, (iii) delegation resolution trace, (iv) result digest and proof hashes. A **Verifier CLI** recomputes eligibility at $h_s$, replays RCV rounds, resolves delegations, validates proofs, and emits a canonical results file.
 
 ### 4.3 Civic Cost Model
 
@@ -117,28 +117,32 @@ Quests select an **evidence tier (ET)** that caps impact: **ET-1** (media + loca
 
 1. **Submission:** Executor stores evidence off-chain; posts content hash + metadata on-chain.
 2. **Review:** At least _m_ Attestors verify and co-sign an attestation leaf.
-3. **Aggregation:** Merkle root \(R = H(\pi \parallel \sigma_1 … \sigma_m)\) recorded as **AttestationRef**.
+3. **Aggregation:** Merkle root $R = H(\pi \parallel \sigma_1 … \sigma_m)$ recorded as **AttestationRef**.
 4. **Challenge window:** Counter-evidence may reduce impact or apply FLAME to signers with restorative steps.
 5. **Mint:** Valid submissions mint ℰ via §5.3.
 
 ### 5.3 Minting Function (ℰ)
 
-Let _c_ be complexity, _i_ bounded impact (per ET), \(\mathbf{s}\) the vector of Attestor STARs, and \(I*{\max}\) the epoch cap:
-\[
+Let _c_ be complexity, _i_ bounded impact (per ET), $\mathbf{s}$ the vector of Attestor STARs, and $I*{\max}$ the epoch cap:
+
+$$
 M = \min\!\left( c^{\alpha} \cdot i^{\beta} \cdot \sqrt{\sum_j s_j},\; I*{\max} \right),
 \quad \alpha,\beta\in(0,1)
-\]
-Defaults: \(\alpha=0.6,\ \beta=0.4\). Impact components are geographically normalized.
+$$
+
+Defaults: $\alpha=0.6,\ \beta=0.4$. Impact components are geographically normalized.
 
 ### 5.4 Reputation Dynamics
 
-\[
-\mathrm{STAR}_t(v) = \gamma \!\!\sum_{(u\to v, w, \tau=+) \in E*t}\!\! w\cdot \mathrm{STAR}*{t-1}(u)\cdot (1-\mathrm{FLAME}_{t-1}(u)),
+$$
+\mathrm{STAR}_t(v) = \gamma \!\!\sum_{(u\to v, w, \tau=+) \in E_t}\!\! w\cdot \mathrm{STAR}*{t-1}(u)\cdot (1-\mathrm{FLAME}_{t-1}(u)),
 \quad \gamma\in(0,1)
-\]
-\[
+$$
+
+$$
 \mathrm{FLAME}\_t(v)=\mathrm{FLAME}_{t-1}(v)\, e^{-\lambda \Delta t}
-\]
+$$
+
 (half-life ≈ 90 days). Reputation influences attestations and surfacing only.
 
 ---
@@ -152,15 +156,16 @@ Defaults: \(\alpha=0.6,\ \beta=0.4\). Impact components are geographically norma
 
 ### 6.2 Supply Streams
 
-- **Contribution mint (ℰ):** Bounded by per-epoch cap \(I\_{\max}\).
+- **Contribution mint (ℰ):** Bounded by per-epoch cap $I\_{\max}$.
 - **UBI issuance (𝒰):** Separate contract; not counted against ℰ cap.
 - **Grants:** Treasury disbursements in ℰ or 𝒰.
 
 ### 6.3 Inflation & Indexing
 
-\[
+$$
 \Delta S*{\mathcal{E}} \le S*{\text{prev}}\cdot \rho,\quad \rho \in [2\%,5\%]\ \text{annualized}
-\]
+$$
+
 𝒰 auto-indexes quarterly to an **Essentials CPI** via a medianized oracle; bounded governance veto/raise. 𝒰 expiration dampens hoarding.
 
 ### 6.4 Treasury & Reserves
@@ -230,52 +235,52 @@ Wallet (web/mobile) for DID/passkeys, ℰ/𝒰, voting, proofs, and recovery. CL
 
 ## 13. Symbols & Parameters
 
-| Symbol                                                          | Domain | Meaning                                                                  |
-| --------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ |
-| \( \mathcal{E} \)                                               | —      | Essent token (transferable)                                              |
-| \( \mathcal{U} \)                                               | —      | Essential Unit (UBI instrument; non-transferable, expiring)              |
-| \( c \in \mathbb{R}\_{\ge 0} \)                                 | —      | Quest complexity parameter                                               |
-| \( i \in \mathbb{R}\_{\ge 0} \)                                 | —      | Bounded impact score (by evidence tier and normalization)                |
-| \( \alpha, \beta \in (0,1) \)                                   | —      | Minting exponents for complexity/impact                                  |
-| \( \mathbf{s} = (s*j)*{j=1..m},\, s*j \in \mathbb{R}*{\ge 0} \) | —      | Attestor STAR weights participating in a mint                            |
-| \( I*{\max} \in \mathbb{R}*{\ge 0} \)                           | —      | Per-epoch cap on ℰ minted via contribution                               |
-| \( S*{\text{prev}} \in \mathbb{R}*{\ge 0} \)                    | —      | Previous total ℰ supply                                                  |
-| \( \rho \in [0.02, 0.05] \)                                     | —      | Annualized upper bound on ℰ supply growth                                |
-| \( \mathrm{STAR}_t(v) \in \mathbb{R}_{\ge 0} \)                 | —      | Influence weight of node \(v\) at time \(t\)                             |
-| \( \gamma \in (0,1) \)                                          | —      | Diffusion damping factor in STAR computation                             |
-| \( \mathrm{FLAME}\_t(v) \in [0,1] \)                            | —      | Decaying fraud flag of node \(v\) at time \(t\)                          |
-| \( \lambda > 0 \)                                               | —      | FLAME exponential decay rate (half-life ≈ 90 days)                       |
-| \( G=(V,E,W,T) \)                                               | —      | Trust multigraph; \(W:E\to[-1,1]\) weights; \(T\) edge types             |
-| \( A \)                                                         | —      | Weighted adjacency matrix derived from \(G\)                             |
-| \( b \)                                                         | —      | Base trust vector                                                        |
-| \( H(\cdot) \)                                                  | —      | Domain-separated cryptographic hash (e.g., Blake3/Poseidon)              |
-| \( h_s \in \mathbb{N} \)                                        | —      | Eligibility snapshot block height for an election                        |
-| `seq` \(\in \mathbb{N}\)                                        | —      | Monotone sequence number for vote updates (commit–reveal)                |
-| `proposalId`                                                    | —      | Canonical proposal reference (hash)                                      |
-| `encodedVote`                                                   | —      | Canonical encoding of ballot contents (ranking, selection, or QV vector) |
-| `salt`                                                          | —      | Per-commitment nonce for hiding vote contents                            |
-| \( B \in \mathbb{N} \)                                          | —      | QV credit budget per voter                                               |
-| \( k \in \mathbb{N} \)                                          | —      | QV intensity on a single option; cost \(k^2\) credits                    |
+| Symbol                                                        | Domain | Meaning                                                                  |
+| ------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ |
+| $\mathcal{E}$                                               | —      | Essent token (transferable)                                              |
+| $\mathcal{U}$                                               | —      | Essential Unit (UBI instrument; non-transferable, expiring)              |
+| $c \in \mathbb{R}\_{\ge 0}$                                 | —      | Quest complexity parameter                                               |
+| $i \in \mathbb{R}\_{\ge 0}$                                 | —      | Bounded impact score (by evidence tier and normalization)                |
+| $\alpha, \beta \in (0,1) $                                  | —      | Minting exponents for complexity/impact                                  |
+| $\mathbf{s} = (s_j){j=1..m},\ s_j \in \mathbb{R}{\ge 0}$    | —      | Attestor STAR weights participating in a mint                            |
+| $I*{\max} \in \mathbb{R}*{\ge 0}$                           | —      | Per-epoch cap on ℰ minted via contribution                               |
+| $S*{\text{prev}} \in \mathbb{R}*{\ge 0}$                    | —      | Previous total ℰ supply                                                  |
+| $\rho \in [0.02, 0.05]$                                     | —      | Annualized upper bound on ℰ supply growth                                |
+| $\mathrm{STAR}t(v) \in \mathbb{R}{\ge 0}$                   | —      | Influence weight of node $v$ at time $t$                                 |
+| $\gamma \in (0,1)$                                          | —      | Diffusion damping factor in STAR computation                             |
+| $\mathrm{FLAME}\_t(v) \in [0,1]$                            | —      | Decaying fraud flag of node $v$ at time $t$                              |
+| $\lambda > 0$                                               | —      | FLAME exponential decay rate (half-life ≈ 90 days)                       |
+| $G=(V,E,W,T)$                                               | —      | Trust multigraph; $W:E\to[-1,1]$ weights; $T$ edge types                 |
+| $A$                                                         | —      | Weighted adjacency matrix derived from $G$                               |
+| $b$                                                         | —      | Base trust vector                                                        |
+| $H(\cdot)$                                                  | —      | Domain-separated cryptographic hash (e.g., Blake3/Poseidon)              |
+| $h_s \in \mathbb{N}$                                        | —      | Eligibility snapshot block height for an election                        |
+| `seq` $\in \mathbb{N}$                                      | —      | Monotone sequence number for vote updates (commit–reveal)                |
+| `proposalId`                                                | —      | Canonical proposal reference (hash)                                      |
+| `encodedVote`                                               | —      | Canonical encoding of ballot contents (ranking, selection, or QV vector) |
+| `salt`                                                      | —      | Per-commitment nonce for hiding vote contents                            |
+| $B \in \mathbb{N}$                                          | —      | QV credit budget per voter                                               |
+| $k \in \mathbb{N}$                                          | —      | QV intensity on a single option; cost $k^2$ credits                      |
 
 **Minting function.**  
-\( M = \min\!\left( c^{\alpha} \cdot i^{\beta} \cdot \sqrt{\sum*j s_j},\; I*{\max} \right) \).
+$M = \min!\left( c^{\alpha} \cdot i^{\beta} \cdot \sqrt{\sum_{j} s_{j}},, I_{\max} \right)$.
 
 **Supply cap.**  
-\( \Delta S*{\mathcal{E}} \le S*{\text{prev}} \cdot \rho \).
+$\Delta S*{\mathcal{E}} \le S*{\text{prev}} \cdot \rho $.
 
 **Reputation dynamics.**  
-\( \mathrm{STAR}_t(v) = \gamma \sum_{(u\to v, w, \tau=+) \in E*t} w \cdot \mathrm{STAR}*{t-1}(u) \cdot (1-\mathrm{FLAME}_{t-1}(u)) \).  
-\( \mathrm{FLAME}\_t(v)=\mathrm{FLAME}_{t-1}(v)\, e^{-\lambda \Delta t} \).
+$\mathrm{STAR}t(v) = \gamma \sum{(u\to v,, w,, \tau=+) \in E_t} w \cdot \mathrm{STAR}{t-1}(u) \cdot \bigl(1-\mathrm{FLAME}{t-1}(u)\bigr)$.  
+$\mathrm{FLAME}\_t(v)=\mathrm{FLAME}\_{t-1}(v)\, e^{-\lambda \Delta t}$.
 
 ---
 
 ## 14. Formal Notation (Extract)
 
-Graph \(G=(V,E,W,T)\) with \(W:E\to[-1,1]\), \(T\) edge types.  
-STAR diffusion \( \mathrm{STAR}=(I-\gamma A)^{-1} b \), weighted adjacency \(A\), base vector \(b\).  
-FLAME decay \( \mathrm{FLAME}(t)=\mathrm{FLAME}(t*0)\, e^{-\lambda (t-t_0)} \).  
-ℰ mint cap \( \Delta S*{\mathcal{E}} \le S\_{\text{prev}}\rho \).  
-RCV uses deterministic tie-break seed \(H(\text{proposalId}\,\|\,\text{snapshotHeight})\).
+Graph $G=(V,E,W,T)$ with $W:E\to[-1,1]$, $T$ edge types.  
+STAR diffusion $\mathrm{STAR}=(I-\gamma A)^{-1} b $, weighted adjacency $A$, base vector $b$.  
+FLAME decay $\mathrm{FLAME}(t)=\mathrm{FLAME}(t_0), e^{-\lambda (t-t_0)}$.  
+ℰ mint cap $\Delta S_{\mathcal{E}} \le S_{\text{prev}},\rho$.  
+RCV uses deterministic tie-break seed $H(\text{proposalId}\,\|\,\text{snapshotHeight})$.
 
 ---
 
@@ -302,7 +307,7 @@ Rights not reputation-gated; ballots private with public proofs; education-issue
 
 ### Appendix A — Mathematical Details (Outline)
 
-- Parameter tables for \(\alpha,\beta,\gamma,\lambda,\rho\).
+- Parameter tables for $\alpha,\beta,\gamma,\lambda,\rho$.
 - ET-tiered impact caps and normalization functions.
 - RCV proof transcript format; delegation resolution algorithm.
 - ZK statement definitions for ballot correctness and tally soundness.
